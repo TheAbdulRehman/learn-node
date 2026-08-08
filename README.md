@@ -19,9 +19,9 @@ Flat, layered structure — har layer ka aik hi kaam hai:
 
 ```
 learn-node/
-├── server.js               # HTTP server + routers ka chain (abhi baaqi)
+├── server.js               # HTTP server + routers ka chain
 ├── routes/                 # Routing layer - URL/method dekh kar controller chunta hai
-│   └── notesRoutes.js      # (abhi baaqi)
+│   └── notesRoutes.js
 ├── controllers/            # Logic layer - actual CRUD kaam
 │   └── notesController.js
 ├── utils/                  # Helpers
@@ -33,23 +33,35 @@ learn-node/
 Layers ka order jaan-boojh kar aisa hai: **data layer → logic layer → routing layer**.
 Har upar wali layer neeche wali par depend karti hai, ulta nahi.
 
-## API routes (planned)
+## API routes
 
-| Method | Route        | Kaam                    | Status  |
-| ------ | ------------ | ----------------------- | ------- |
-| GET    | `/notes`     | Saari notes             | ✅ Done |
-| GET    | `/notes/:id` | Aik note                | ✅ Done |
-| POST   | `/notes`     | Nayi note banao         | ✅ Done |
-| PUT    | `/notes/:id` | Note update karo        | ⬜ Baaqi |
-| DELETE | `/notes/:id` | Note delete karo        | ⬜ Baaqi |
+| Method | Route        | Kaam                   | Success | Not found |
+| ------ | ------------ | ---------------------- | ------- | --------- |
+| GET    | `/notes`     | Saari notes            | 200     | —         |
+| GET    | `/notes/:id` | Aik note               | 200     | 404       |
+| POST   | `/notes`     | Nayi note banao        | 201     | 400 (bad JSON) |
+| PUT    | `/notes/:id` | Note update karo       | 200     | 404 / 400 |
+| DELETE | `/notes/:id` | Note delete karo       | 200     | 404       |
+
+Koi bhi doosri route → `404 { "message": "Resource nahi mila" }`
 
 ## Chalane ka tareeqa
 
-> **Note:** abhi `server.js` aur `routes/notesRoutes.js` nahi bane, isliye
-> server abhi run nahi hota. Ye agle chunk mein banenge.
-
 ```bash
 npm start
+```
+
+Default port `4375`, ya `PORT` env var se badlein:
+
+```bash
+PORT=3000 npm start
+```
+
+Try karne ke liye:
+
+```bash
+curl -X POST localhost:4375/notes -d '{"title":"Pehli note","content":"Test"}'
+curl localhost:4375/notes
 ```
 
 ## Deliberate simplifications

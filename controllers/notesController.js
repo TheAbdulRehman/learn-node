@@ -34,7 +34,18 @@ function createNote(req, res) {
 
   // Jab pura data aa chuka - 'end' event fire hoti hai
   req.on('end', () => {
-    const { title, content } = JSON.parse(body);
+    // Client kuch bhi bhej sakta hai - agar JSON kharab hua to parse throw karega
+    // aur poora server crash ho jayega. Isliye try/catch zaroori hai.
+    let parsed;
+    try {
+      parsed = JSON.parse(body);
+    } catch (err) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: 'Ghalat JSON bheja gaya hai' }));
+      return;
+    }
+
+    const { title, content } = parsed;
 
     const notes = readNotes();
     const newNote = {
@@ -52,5 +63,75 @@ function createNote(req, res) {
   });
 }
 
-// TODO: updateNote aur deleteNote abhi baaqi hain - agle chunk mein
-module.exports = { getAllNotes, getNoteById, createNote };
+// PUT /notes/:id - maujooda note update karta hai
+function updateNote(req, res, id) {
+  let body = ''; // wahi chunk-collecting pattern jo createNote mein tha
+
+  req.on('data', (chunk) => {
+    body += chunk.toString();
+  });
+
+  req.on('end', () => {
+    let parsed;
+    try {
+      parsed = JSON.parse(body);
+    } catch (err) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: 'Ghalat JSON bheja gaya hai' }));
+      return;
+    }
+
+    const { title, content } = parsed;
+
+    const notes = readNotes();
+    // find nahi, findIndex - kyunki humein array ke andar wali jagah chahiye taake wahin overwrite kar sakein
+    const index = notes.findIndex((n) => n.id === id);
+
+    if (index === -1) {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: 'Note nahi mili' }));
+      return;
+    }
+
+    // Purani note ko spread kar ke sirf nayi values upar likh dete hain
+    // ?? ka matlab: agar client ne field bheji hi nahi, to purani value rehne do
+    notes[index] = {
+      ...notes[index],
+      title: title ?? notes[index].title,
+      content: content ?? notes[index].content,
+      updatedAt: new Date().toISOString(),
+    };
+
+    writeNotes(notes);
+
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(notes[index]));
+  });
+}
+
+// DELETE /notes/:id - note hata deta hai
+function deleteNote(req, res, id) {
+  const notes = readNotes();
+  // filter nayi array banata hai jismein sirf wo notes hain jinki id match nahi karti
+  const remainingNotes = notes.filter((n) => n.id !== id);
+
+  // Agar length badli hi nahi, matlab is id ki koi note thi hi nahi
+  if (remainingNotes.length === notes.length) {
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ message: 'Note nahi mili' }));
+    return;
+  }
+
+  writeNotes(remainingNotes);
+
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({ message: 'Note delete ho gayi' }));
+}
+
+module.exports = {
+  getAllNotes,
+  getNoteById,
+  createNote,
+  updateNote,
+  deleteNote,
+};
