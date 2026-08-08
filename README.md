@@ -48,13 +48,13 @@ Koi bhi doosri route → `404 { "message": "Resource nahi mila" }`
 ## Chalane ka tareeqa
 
 ```bash
-npm start
+npm run dev
 ```
 
 Default port `4375`, ya `PORT` env var se badlein:
 
 ```bash
-PORT=3000 npm start
+PORT=3000 npm run dev
 ```
 
 Try karne ke liye:
