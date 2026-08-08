@@ -1,0 +1,22 @@
+{
+  "name": "learn-node",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pure Node.js (bina Express) se banayi gayi Notes CRUD API - learning project",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "nodejs",
+    "http",
+    "crud",
+    "learning",
+    "no-framework"
+  ],
+  "author": "TheAbdulRehman",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheAbdulRehman/learn-node.git"
+  }
+}

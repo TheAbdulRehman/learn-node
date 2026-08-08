@@ -6,3 +6,18 @@ node_modules
 dist
 build
 .DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Test coverage
+coverage
+
+# Editor / IDE
+.vscode
+.idea
+
+# Claude Code local settings (CLAUDE.md khud commit hoti hai, ye local settings nahi)
+.claude/settings.local.json
