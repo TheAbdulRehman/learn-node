@@ -1,16 +1,19 @@
 // Business logic yahan likhi jati hai - request/response ko handle karta hai
-const { readNotes, writeNotes } = require('../utils/fileHelper');
+const createFileHelper = require('../utils/fileHelper');
+
+// 'notes' ke liye apna helper - ye data/notes.json se juda hua hai
+const notesFile = createFileHelper('notes');
 
 // GET /notes - saari notes wapis bhejta hai
 function getAllNotes(req, res) {
-  const notes = readNotes();
+  const notes = notesFile.read();
   res.writeHead(200, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify(notes));
 }
 
 // GET /notes/:id - ek specific note dhoondta hai
 function getNoteById(req, res, id) {
-  const notes = readNotes();
+  const notes = notesFile.read();
   const note = notes.find((n) => n.id === id);
 
   if (!note) {
@@ -47,7 +50,7 @@ function createNote(req, res) {
 
     const { title, content } = parsed;
 
-    const notes = readNotes();
+    const notes = notesFile.read();
     const newNote = {
       id: Date.now().toString(),
       title,
@@ -56,7 +59,7 @@ function createNote(req, res) {
     };
 
     notes.push(newNote);
-    writeNotes(notes);
+    notesFile.write(notes);
 
     res.writeHead(201, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(newNote));
@@ -83,7 +86,7 @@ function updateNote(req, res, id) {
 
     const { title, content } = parsed;
 
-    const notes = readNotes();
+    const notes = notesFile.read();
     // find nahi, findIndex - kyunki humein array ke andar wali jagah chahiye taake wahin overwrite kar sakein
     const index = notes.findIndex((n) => n.id === id);
 
@@ -102,7 +105,7 @@ function updateNote(req, res, id) {
       updatedAt: new Date().toISOString(),
     };
 
-    writeNotes(notes);
+    notesFile.write(notes);
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(notes[index]));
@@ -111,7 +114,7 @@ function updateNote(req, res, id) {
 
 // DELETE /notes/:id - note hata deta hai
 function deleteNote(req, res, id) {
-  const notes = readNotes();
+  const notes = notesFile.read();
   // filter nayi array banata hai jismein sirf wo notes hain jinki id match nahi karti
   const remainingNotes = notes.filter((n) => n.id !== id);
 
@@ -122,7 +125,7 @@ function deleteNote(req, res, id) {
     return;
   }
 
-  writeNotes(remainingNotes);
+  notesFile.write(remainingNotes);
 
   res.writeHead(200, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify({ message: 'Note delete ho gayi' }));

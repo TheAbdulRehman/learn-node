@@ -16,5 +16,11 @@
     "title": "Async fs par shift karna",
     "content": "Abhi readFileSync/writeFileSync hai jo blocking hai. Baad mein fs.promises use karni hai.",
     "createdAt": "2026-08-08T06:10:00.000Z"
+  },
+  {
+    "id": "1786152895577",
+    "title": "chauthi  note",
+    "content": "Ye aik dummy note hai taake GET /notes khali array na de.",
+    "createdAt": "2026-08-08T01:34:55.577Z"
   }
 ]
