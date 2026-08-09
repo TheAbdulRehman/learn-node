@@ -14,8 +14,10 @@
     "rootDir": "./src",
     "outDir": "./dist",
 
-    // FILHAAL false - Chunk 4 mein isko true karenge jab saare types lag jayenge
-    "strict": false,
+    // Shuru se hi on. Purana code khali kar diya gaya hai, isliye ab koi
+    // "pehle migrate karo phir strict karo" wali majboori nahi rahi -
+    // har nayi line pehle din se typed likhi jayegi.
+    "strict": true,
 
     // Error hone par bhi dist/ mein files na likhe - warna purani build chalti reh jati hai
     "noEmitOnError": true,
