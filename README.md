@@ -7,27 +7,33 @@ kaise hoti hain.
 
 ## Kya use ho raha hai
 
-Sirf Node ke built-in modules — koi npm dependency nahi:
+**Runtime par koi dependency nahi** — sirf Node ke built-in modules:
 
 - `http` — server aur manual routing
 - `fs` — JSON file mein data persist karna
 - `path` — cross-platform file paths
 
+TypeScript aur `@types/node` sirf **devDependencies** hain — chalte hue server
+mein inka koi wajood nahi, `dist/` mein saada JavaScript hi jata hai.
+
 ## Folder structure
 
-Flat, layered structure — har layer ka aik hi kaam hai:
+Layered structure — har layer ka aik hi kaam hai:
 
 ```
 learn-node/
-├── server.js               # HTTP server + routers ka chain
-├── routes/                 # Routing layer - URL/method dekh kar controller chunta hai
-│   └── notesRoutes.js
-├── controllers/            # Logic layer - actual CRUD kaam
-│   └── notesController.js
-├── utils/                  # Helpers
-│   └── fileHelper.js       # JSON file read/write
-└── data/                   # "Database" - flat JSON files
-    └── notes.json
+├── src/                        # TypeScript source
+│   ├── server.ts               # HTTP server + routers ka chain
+│   ├── routes/                 # Routing layer - URL/method dekh kar controller chunta hai
+│   │   └── notesRoutes.ts
+│   ├── controllers/            # Logic layer - actual CRUD kaam
+│   │   └── notesController.ts
+│   └── utils/                  # Helpers
+│       └── fileHelper.ts       # JSON file read/write factory
+├── dist/                       # tsc ka output (gitignored)
+├── data/                       # "Database" - flat JSON files
+│   └── notes.json
+└── tsconfig.json
 ```
 
 Layers ka order jaan-boojh kar aisa hai: **data layer → logic layer → routing layer**.
@@ -48,8 +54,16 @@ Koi bhi doosri route → `404 { "message": "Resource nahi mila" }`
 ## Chalane ka tareeqa
 
 ```bash
-npm run dev
+npm install     # sirf devDependencies (typescript, @types/node)
+npm run dev     # tsc build + node dist/server.js
 ```
+
+| Script | Kaam |
+| --- | --- |
+| `npm run dev` | Build kar ke server chalata hai |
+| `npm run build` | Sirf `dist/` banata hai |
+| `npm run typecheck` | Sirf types check karta hai, koi file nahi likhta |
+| `npm run watch` | File badalte hi dobara compile karta hai |
 
 Default port `4375`, ya `PORT` env var se badlein:
 

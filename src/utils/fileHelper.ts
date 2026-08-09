@@ -8,7 +8,11 @@ const path = require('path');
 //   const usersFile = createFileHelper('users');   -> data/users.json
 function createFileHelper(fileName) {
   // Ye path sirf ek dafa bana - andar wale functions isko yaad rakhte hain (closure)
-  const filePath = path.join(__dirname, '..', 'data', `${fileName}.json`);
+  //
+  // Dhyan se: chalte waqt ye file dist/utils/ mein hoti hai, src/utils/ mein nahi.
+  // Isliye project root tak pohanchne ke liye DO level upar jana padta hai:
+  //   dist/utils -> dist -> <root> -> data/notes.json
+  const filePath = path.join(__dirname, '..', '..', 'data', `${fileName}.json`);
 
   // File maujood na ho to khali array bana do - warna readFileSync throw karti hai
   function ensureFile() {

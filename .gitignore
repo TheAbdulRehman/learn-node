@@ -7,6 +7,10 @@ dist
 build
 .DS_Store
 
+# User data - public repo mein passwords/hashes kabhi commit nahi karni.
+# fileHelper ka ensureFile() ye file khud bana leta hai, isliye ignore karna safe hai.
+data/users.json
+
 # Logs
 *.log
 npm-debug.log*

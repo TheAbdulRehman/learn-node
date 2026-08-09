@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    // Node 22 modern JS samajhta hai, isliye downgrade karne ki zaroorat nahi
+    "target": "ES2022",
+    "lib": ["ES2022"],
+
+    // "node16" ka matlab: modules waise resolve karo jaise asal Node karta hai.
+    // package.json mein "type": "module" nahi hai, isliye ye CommonJS hi banata hai -
+    // require/module.exports jaisa chal raha tha waisa hi chalega.
+    // (Purani "moduleResolution": "node" TypeScript 7 mein hata di gayi hai)
+    "module": "node16",
+
+    // Kahan se parhna hai aur kahan likhna hai
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    // FILHAAL false - Chunk 4 mein isko true karenge jab saare types lag jayenge
+    "strict": false,
+
+    // Error hone par bhi dist/ mein files na likhe - warna purani build chalti reh jati hai
+    "noEmitOnError": true,
+
+    // Debug karte waqt .js ki jagah asal .ts line dikhaye
+    "sourceMap": true,
+
+    // Node ke built-in types (require, module, __dirname, process, console)
+    // yahan se aate hain. Explicitly likha hai taake koi shak na rahe.
+    "types": ["node"],
+
+    // node_modules ki .d.ts files check na kare - build tez rehti hai
+    "skipLibCheck": true,
+
+    // macOS case-insensitive hai, Linux nahi - ye us farq se bachata hai
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

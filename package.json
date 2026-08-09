@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "description": "Pure Node.js (bina Express) se banayi gayi Notes CRUD API - learning project",
-  "main": "server.js",
+  "main": "dist/server.js",
   "scripts": {
-    "dev": "node server.js"
+    "build": "tsc",
+    "dev": "tsc && node dist/server.js",
+    "typecheck": "tsc --noEmit",
+    "watch": "tsc --watch"
   },
   "keywords": [
     "nodejs",
@@ -18,5 +21,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TheAbdulRehman/learn-node.git"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "typescript": "^7.0.2"
   }
 }
