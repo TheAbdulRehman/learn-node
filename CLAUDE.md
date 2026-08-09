@@ -7,6 +7,7 @@ This project is a **learning exercise**, not a production deliverable. The user 
 - All conversational explanations, reasoning, and teaching commentary must be in **Roman Urdu**.
 - All in-code comments must be in **Roman Urdu**.
 - Code itself (variable names, function names, syntax) stays in English, as is standard.
+- **Git commit messages are in English**, and carry no `Co-Authored-By` trailer. The commit history is the public-facing part of this open-source repo, so it follows normal English conventions — the Roman Urdu rule stops at the code. Keep explaining *why* a change was made in the commit body; only the language differs.
 
 ## Core Teaching Process (always follow this order)
 
