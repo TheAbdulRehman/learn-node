@@ -1,6 +1,8 @@
 // Ye file sirf Express app banati aur configure karti hai.
 // Yahan koi port nahi khulta - wo kaam server.ts ka hai. Wajah neeche samjhayi hai.
 import express = require('express');
+import notFound = require('./middleware/notFound');
+import errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
@@ -15,5 +17,19 @@ app.use(express.json());
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
+
+// Notes ke routes yahan lagenge - abhi banana baaqi hai (Postgres ke saath).
+
+// ===== Yahan se neeche wali cheezon ki TARTEEB ahm hai =====
+// Express middleware ko upar se neeche chalata hai. Agar notFound ko routes se
+// pehle rakh dete, to har request 404 ban jati - kyunki wo sab se pehle chal
+// kar javab bhej deta aur asal route ki bari aati hi nahi.
+
+// Sab routes ke baad: yahan pohanchne ka matlab hai koi route match nahi hua
+app.use(notFound);
+
+// Sab se aakhir mein: error handler. Iske chaar parameters hain, isi se
+// Express pehchanta hai ke ye aam middleware nahi, error handler hai.
+app.use(errorHandler);
 
 export = app;
