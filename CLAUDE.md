@@ -28,10 +28,31 @@ This project is a **learning exercise**, not a production deliverable. The user 
 - Do not silently skip explaining a genuinely non-obvious decision just to save space — accuracy and completeness of reasoning matters more than brevity.
 
 ## Project conventions (for this specific codebase)
-- Architecture: flat folder structure — `routes/`, `controllers/`, `utils/`, `data/`.
-- No frameworks (no Express) unless the user explicitly asks to introduce one — the point is to learn raw Node.js (`http`, `fs`, `events`) first.
-- Data persistence: flat JSON files via `fs`, not a real database (intentional simplification for learning; mention the production alternative when relevant, e.g., `uuid` instead of `Date.now()` for IDs).
-- Prefer synchronous `fs` methods for now (simplicity over performance) — but flag this as a deliberate simplification, not a best practice, when it comes up.
+
+### Language & build
+- **TypeScript**, compiled with `tsc` (`src/` → `dist/`). No bundler, no `tsx`, no Node native type-stripping — the build step is deliberate so that type errors block the build.
+- **CommonJS** module output. In source, use TypeScript's import-equals form:
+  ```ts
+  import express = require('express');
+  ```
+  This is still `require` (identical compiled output), but unlike plain `const x = require(...)` it preserves types. Never use plain `const x = require(...)` for anything whose types matter.
+- Scripts: `npm run dev` (build + run), `build`, `typecheck`, `watch`.
+
+### Architecture
+- Layered structure under `src/` — `routes/`, `controllers/`, `db/`, `utils/`. Data lives in `data/` at project root (outside `src/`).
+- Remember that `__dirname` points into `dist/` at runtime, not `src/` — relative paths must account for the extra level.
+
+### Stack
+- **Express** is now the routing layer (the hand-written `http` router was built first, deliberately, so the contrast is understood).
+- **PostgreSQL on Neon** (online) for persistence.
+- **Pure SQL** — no ORM, no query builder (Prisma/Drizzle/Knex). Writing SQL by hand is the point. Data validation also leans on SQL constraints.
+- **Env vars via Node's native `--env-file`** — no `dotenv` package (Node ≥ 20.6 reads `.env` itself).
+- **Add packages only when genuinely necessary.** Current full list: `express`, `@types/express`, `pg`, `@types/pg`, plus `typescript` and `@types/node` as devDependencies. Before adding anything else, justify it out loud first.
+
+### Security (this is a public open-source repo)
+- Never commit secrets, connection strings, `.env` files, or user data (passwords/hashes) — `.gitignore` covers these; keep it that way.
 
 ## Current learning context
-The user has already covered: JS fundamentals/ES6, Node.js paradigms & architecture overview, event-driven programming (EventEmitter), the event loop (conceptually skipped for now — will return later), and has built a full Notes CRUD API (data layer, controller layer, routing layer, multi-router `server.js` setup) using this process. Do not re-teach these from scratch; build on top of them.
+The user has already covered: JS fundamentals/ES6, Node.js paradigms & architecture overview, event-driven programming (EventEmitter), the event loop (conceptually skipped for now — will return later), and built a full Notes CRUD API from scratch in **raw Node** (`http` + `fs`): data layer as a `createFileHelper` factory, controller layer, hand-written routing layer with a `true/false` router-chain in `server.ts`. That project was then migrated to TypeScript with a `tsc` build. Do not re-teach any of this from scratch; build on top of it.
+
+The current arc is converting that same Notes CRUD into a production-shaped setup — Express, Neon Postgres, env vars, raw SQL — **still for learning purposes**, so the teaching process above applies to every step of it.
